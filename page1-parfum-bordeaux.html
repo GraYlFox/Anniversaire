@@ -11,13 +11,15 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --ink: #1a1410;
     --parchment: #0d0b09;
     --gold: #c9a96e;
     --gold-dim: #7a5f3a;
     --cream: #e8dfd0;
     --muted: #6b5e4e;
     --error: #c47a6a;
+    --map-bg: #c8b89a;
+    --map-ink: #2a1f0e;
+    --map-aged: #a8946e;
   }
 
   html, body {
@@ -59,62 +61,22 @@
     align-items: center;
     gap: 16px;
   }
-
-  .eyebrow::after {
-    content: '';
-    flex: 1;
-    height: 0.5px;
-    background: var(--gold-dim);
-    opacity: 0.4;
-  }
+  .eyebrow::after { content: ''; flex: 1; height: 0.5px; background: var(--gold-dim); opacity: 0.4; }
 
   section { opacity: 0; transform: translateY(18px); transition: opacity 1.2s ease, transform 1.2s ease; }
   section.visible { opacity: 1; transform: translateY(0); }
 
-  .poem {
-    font-size: clamp(17px, 2.5vw, 20px);
-    font-style: italic;
-    color: var(--cream);
-    margin-bottom: 56px;
-  }
-
+  .poem { font-size: clamp(17px, 2.5vw, 20px); font-style: italic; color: var(--cream); margin-bottom: 56px; }
   .poem p { margin-bottom: 1em; }
   .poem p:last-child { margin-bottom: 0; }
 
-  .salutation {
-    font-size: 13px;
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12em;
-    color: var(--gold);
-    margin-bottom: 36px;
-    font-style: normal;
-  }
+  .salutation { font-size: 13px; font-family: 'Jost', sans-serif; font-weight: 300; letter-spacing: 0.12em; color: var(--gold); margin-bottom: 36px; font-style: normal; }
 
-  .divider {
-    width: 40px;
-    height: 0.5px;
-    background: var(--gold-dim);
-    margin: 56px auto;
-    opacity: 0.5;
-  }
+  .divider { width: 40px; height: 0.5px; background: var(--gold-dim); margin: 56px auto; opacity: 0.5; }
 
-  .enigme-label {
-    font-family: 'Jost', sans-serif;
-    font-size: 9px;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    margin-bottom: 32px;
-  }
+  .enigme-label { font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 32px; }
 
-  .enigme-text {
-    font-size: clamp(16px, 2.2vw, 19px);
-    color: #c4b89e;
-    margin-bottom: 48px;
-    font-style: italic;
-  }
-
+  .enigme-text { font-size: clamp(16px, 2.2vw, 19px); color: #c4b89e; margin-bottom: 48px; font-style: italic; }
   .enigme-text p { margin-bottom: 1em; }
 
   .answer-zone { margin-top: 40px; }
@@ -134,7 +96,6 @@
     letter-spacing: 0.05em;
     text-align: center;
   }
-
   .answer-zone input::placeholder { color: var(--muted); font-style: italic; }
   .answer-zone input:focus { border-color: var(--gold); }
   .answer-zone input.shake { animation: shake 0.45s ease; border-color: var(--error); }
@@ -147,93 +108,149 @@
     80% { transform: translateX(5px); }
   }
 
-  .answer-hint {
-    font-family: 'Jost', sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    color: var(--muted);
-    text-align: center;
-    margin-top: 14px;
-    text-transform: uppercase;
-  }
-
-  .error-msg {
-    font-family: 'Jost', sans-serif;
-    font-size: 11px;
-    color: var(--error);
-    text-align: center;
-    margin-top: 12px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    letter-spacing: 0.1em;
-  }
-
+  .answer-hint { font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 0.2em; color: var(--muted); text-align: center; margin-top: 14px; text-transform: uppercase; }
+  .error-msg { font-family: 'Jost', sans-serif; font-size: 11px; color: var(--error); text-align: center; margin-top: 12px; opacity: 0; transition: opacity 0.3s; letter-spacing: 0.1em; }
   .error-msg.show { opacity: 1; }
 
-  /* Révélation */
-  .revelation {
+  /* ── CARTE ANCIENNE ── */
+  .map-reveal {
     display: none;
-    text-align: center;
-    padding-top: 24px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 1.4s ease, transform 1.4s ease;
+    padding-top: 16px;
   }
+  .map-reveal.show { display: block; }
+  .map-reveal.animate { opacity: 1; transform: translateY(0); }
 
-  .revelation.show { display: block; }
-
-  .revelation-text {
+  .map-intro {
+    font-style: italic;
     font-size: clamp(15px, 2vw, 17px);
     color: #a89070;
-    font-style: italic;
-    margin-bottom: 48px;
     line-height: 2;
+    margin-bottom: 36px;
+    text-align: center;
   }
 
-  .qr-frame {
-    display: inline-block;
-    border: 0.5px solid var(--gold-dim);
-    padding: 20px;
-    margin-bottom: 20px;
+  .old-map {
     position: relative;
+    background: #c4ad85;
+    border-radius: 2px;
+    padding: 32px 28px 28px;
+    margin: 0 auto;
+    box-shadow:
+      inset 0 0 60px rgba(80,50,10,0.35),
+      0 4px 24px rgba(0,0,0,0.6),
+      0 1px 4px rgba(0,0,0,0.4);
+    overflow: hidden;
+    /* texture parchemin */
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.08'/%3E%3C/svg%3E"),
+      linear-gradient(135deg, #cbb98a 0%, #c4ad85 40%, #b89e72 100%);
   }
 
-  .qr-frame::before, .qr-frame::after {
+  /* Bords vieillis */
+  .old-map::before {
     content: '';
     position: absolute;
-    width: 10px;
-    height: 10px;
-    border-color: var(--gold);
-    border-style: solid;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 0% 0%, rgba(60,30,5,0.45) 0%, transparent 45%),
+      radial-gradient(ellipse at 100% 0%, rgba(60,30,5,0.4) 0%, transparent 45%),
+      radial-gradient(ellipse at 0% 100%, rgba(60,30,5,0.5) 0%, transparent 45%),
+      radial-gradient(ellipse at 100% 100%, rgba(60,30,5,0.5) 0%, transparent 45%),
+      radial-gradient(ellipse at 50% 50%, transparent 60%, rgba(40,20,5,0.2) 100%);
+    pointer-events: none;
+    border-radius: 2px;
   }
 
-  .qr-frame::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
-  .qr-frame::after  { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
-
-  .qr-placeholder {
-    width: 160px;
-    height: 160px;
-    background: #1e1a14;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+  /* Bordure déco de carte ancienne */
+  .map-border {
+    position: absolute;
+    inset: 10px;
+    border: 1.5px solid rgba(80,50,10,0.4);
+    pointer-events: none;
+  }
+  .map-border::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 0.5px solid rgba(80,50,10,0.25);
   }
 
-  .qr-placeholder svg { opacity: 0.5; }
+  .map-content { position: relative; z-index: 1; }
 
-  .qr-caption {
+  .map-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(42,31,14,0.7);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  /* SVG de la carte schématique */
+  .map-svg { display: block; width: 100%; max-width: 420px; margin: 0 auto; }
+
+  .map-legend {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .map-legend-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: rgba(42,31,14,0.85);
+    margin-bottom: 6px;
+  }
+
+  .map-legend-sub {
+    font-family: 'Jost', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(42,31,14,0.5);
+  }
+
+  .map-cta {
+    display: block;
+    margin: 28px auto 0;
+    text-align: center;
     font-family: 'Jost', sans-serif;
     font-size: 10px;
     letter-spacing: 0.3em;
-    color: var(--gold-dim);
     text-transform: uppercase;
-    margin-top: 16px;
+    color: var(--gold-dim);
+    text-decoration: none;
+    border-bottom: 0.5px solid var(--gold-dim);
+    padding-bottom: 4px;
+    width: fit-content;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .map-cta:hover { color: var(--gold); border-color: var(--gold); }
+
+  @keyframes drawPath {
+    from { stroke-dashoffset: 1; }
+    to   { stroke-dashoffset: 0; }
   }
 
-  /* REPLACE THIS with your actual QR code image: */
-  /* <img src="YOUR_QR_CODE.png" width="160" height="160" alt="QR code"> */
+  .animated-path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    pathLength: 1;
+  }
+  .animated-path.draw {
+    animation: drawPath 2.5s ease forwards;
+    animation-delay: 0.6s;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     section { transition: none; opacity: 1; transform: none; }
+    .map-reveal { transition: none; }
+    .animated-path { animation: none; stroke-dashoffset: 0; }
   }
 </style>
 </head>
@@ -242,44 +259,39 @@
 <div class="grain" aria-hidden="true"></div>
 
 <div class="page">
-
   <div class="eyebrow">Pour toi</div>
 
-  <!-- Section 1 : le poème du parfum -->
   <section id="s1">
     <p class="salutation">Mon Amour,</p>
     <div class="poem">
       <p>Ce soir commence une nouvelle aventure.</p>
-      <p>Il y a une chose que tu cherches parfois les yeux fermés,<br>
-      le matin, avant même d'ouvrir les yeux.<br>
-      Sans parler, sans geindre, sans ouvrir les yeux.<br>
-      Juste une présence réconfortante,<br>
-      qui dit <em>je suis là, près de toi</em><br>
-      sans avoir besoin de le dire.</p>
-      <p>Ce cadeau-là, tu le connais déjà par cœur.<br>
+      <p>Il y a une chose que tu cherches souvent les yeux fermés,<br>
+      le matin, avant même de te lever.<br>
+      Pas un mot. Pas un son.<br>
+      Juste une présence — réconfortante, apaisante,<br>
+      qui dit <em>je suis là</em><br>
+      sans avoir la nécessité de le dire.</p>
+      <p>Ce premier cadeau-là, tu le connais déjà par cœur.<br>
       Il ne fait que te donner le moyen<br>
-      de l'emporter avec toi.<br></p>
-      
-      <p>Ce poème te donnera une indication sur une partie de ton cadeau</p>
+      de l'emporter avec toi.</p>
     </div>
   </section>
 
   <div class="divider" aria-hidden="true"></div>
 
-  <!-- Section 2 : l'énigme -->
   <section id="s2">
-    <p class="enigme-label">Maintenant, une énigme</p>
+    <p class="enigme-label">Maintenant, une énigme pour le grand spectable</p>
 
     <div class="enigme-text">
       <p>Il y a une ville où l'on dit que le temps<br>
       travaille mieux que les hommes.</p>
       <p>Où ce qui est dégusté<br>
-      vaut plus que ce qui est consommé trop vite.</p>
+      vaut plus que ce qui est consommé.</p>
       <p>Une ville traversée par un fleuve<br>
-      qui a vu passer patiemment les siècles.</p>
+      qui a vu défiler les siècles patiemment.</p>
       <p>Cette ville a une couleur.<br>
-      Pas tout à fait sang, Pas tout à fait pourpre.<br>
-      Mais elle conduira à une nuit de lumière</p>
+      Pas tout à fait sang. Pas tout à fait pourpre.<br>
+      Elle te conduira à une nuit de Lumière.</p>
     </div>
 
     <div class="answer-zone" id="answerZone">
@@ -288,51 +300,164 @@
       <p class="error-msg" id="errorMsg">Ce n'est pas tout à fait ça — cherche encore.</p>
     </div>
 
-    <!-- Révélation après bonne réponse -->
-    <div class="revelation" id="revelation">
-      <p class="revelation-text">
-        Quelqu'un t'attend là-bas.<br>
-        Une cave. Une enveloppe à ton nom.<br>
-        <br>
-        Scanne quand tu y seras.
+    <!-- Carte ancienne révélée après bonne réponse -->
+    <div class="map-reveal" id="mapReveal">
+
+      <p class="map-intro">
+        Une carte ancienne a refait surface.<br>
+        Elle indique ton prochain arrêt.
       </p>
-      <div class="qr-frame">
-        <div class="qr-placeholder" id="qrPlaceholder">
-          <!-- Remplace ce bloc par ton image QR code réelle : -->
-          <!-- <img src="ton-qr-code.png" width="160" height="160" alt="QR code"> -->
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c9a96e" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-            <rect x="3" y="14" width="7" height="7"/>
-            <rect x="14" y="14" width="3" height="3"/>
-            <rect x="18" y="14" width="3" height="3"/>
-            <rect x="14" y="18" width="3" height="3"/>
-            <rect x="18" y="18" width="3" height="3"/>
+
+      <div class="old-map">
+        <div class="map-border"></div>
+        <div class="map-content">
+
+          <p class="map-title">Bordeaux · Carte de navigation</p>
+
+          <!-- Carte SVG schématique de Bordeaux avec chemin -->
+          <svg class="map-svg" viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="aged">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G"/>
+              </filter>
+              <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L6,3 z" fill="rgba(120,60,10,0.8)"/>
+              </marker>
+            </defs>
+
+            <!-- La Garonne — fleuve -->
+            <path d="M 0,185 C 40,175 80,195 130,180 C 180,165 220,190 270,175 C 320,160 370,180 420,170"
+              fill="none" stroke="rgba(70,100,140,0.5)" stroke-width="22" stroke-linecap="round" filter="url(#aged)"/>
+            <path d="M 0,185 C 40,175 80,195 130,180 C 180,165 220,190 270,175 C 320,160 370,180 420,170"
+              fill="none" stroke="rgba(90,130,180,0.3)" stroke-width="14" stroke-linecap="round"/>
+            <!-- Label fleuve -->
+            <text x="200" y="200" font-family="Cormorant Garamond, serif" font-size="9" font-style="italic"
+              fill="rgba(42,31,14,0.45)" text-anchor="middle" letter-spacing="3">La Garonne</text>
+
+            <!-- Rues schématiques -->
+            <g stroke="rgba(42,31,14,0.25)" stroke-width="1" fill="none" filter="url(#aged)">
+              <!-- Cours Victor Hugo -->
+              <line x1="60" y1="80" x2="60" y2="170"/>
+              <!-- Rue Sainte-Catherine -->
+              <line x1="100" y1="60" x2="100" y2="175"/>
+              <!-- Cours d'Alsace -->
+              <line x1="30" y1="120" x2="200" y2="120"/>
+              <!-- Allées de Tourny -->
+              <line x1="30" y1="95"  x2="180" y2="95"/>
+              <!-- Cours du Chapeau Rouge -->
+              <line x1="100" y1="140" x2="230" y2="140"/>
+              <!-- Rue des Remparts -->
+              <line x1="130" y1="60" x2="130" y2="175"/>
+              <!-- Transversales -->
+              <line x1="30" y1="70"  x2="220" y2="70"/>
+              <line x1="30" y1="155" x2="250" y2="155"/>
+              <!-- Zone Chartrons / Biltoki -->
+              <line x1="220" y1="60" x2="220" y2="165"/>
+              <line x1="260" y1="60" x2="260" y2="168"/>
+              <line x1="200" y1="80" x2="320" y2="80"/>
+              <line x1="200" y1="100" x2="330" y2="100"/>
+              <line x1="200" y1="120" x2="330" y2="120"/>
+              <line x1="200" y1="140" x2="330" y2="140"/>
+              <line x1="300" y1="60" x2="300" y2="170"/>
+            </g>
+
+            <!-- Bloc Saint-Michel / Vieux Bordeaux -->
+            <rect x="55" y="65" width="18" height="14" fill="rgba(42,31,14,0.12)" stroke="rgba(42,31,14,0.2)" stroke-width="0.5"/>
+            <rect x="90" y="85" width="22" height="18" fill="rgba(42,31,14,0.1)" stroke="rgba(42,31,14,0.2)" stroke-width="0.5"/>
+            <rect x="55" y="125" width="30" height="20" fill="rgba(42,31,14,0.1)" stroke="rgba(42,31,14,0.2)" stroke-width="0.5"/>
+            <rect x="105" y="100" width="16" height="12" fill="rgba(42,31,14,0.1)" stroke="rgba(42,31,14,0.2)" stroke-width="0.5"/>
+            <rect x="140" y="70" width="24" height="16" fill="rgba(42,31,14,0.1)" stroke="rgba(42,31,14,0.2)" stroke-width="0.5"/>
+            <!-- Chartrons -->
+            <rect x="225" y="85" width="28" height="20" fill="rgba(42,31,14,0.1)" stroke="rgba(42,31,14,0.2)" stroke-width="0.5"/>
+            <rect x="265" y="105" width="20" height="14" fill="rgba(42,31,14,0.1)" stroke="rgba(42,31,14,0.2)" stroke-width="0.5"/>
+            <rect x="305" y="85" width="18" height="16" fill="rgba(42,31,14,0.1)" stroke="rgba(42,31,14,0.2)" stroke-width="0.5"/>
+
+            <!-- Labels quartiers -->
+            <text x="100" y="58" font-family="Cormorant Garamond, serif" font-size="8" font-style="italic"
+              fill="rgba(42,31,14,0.4)" text-anchor="middle" letter-spacing="1">Vieux Bordeaux</text>
+            <text x="270" y="58" font-family="Cormorant Garamond, serif" font-size="8" font-style="italic"
+              fill="rgba(42,31,14,0.4)" text-anchor="middle" letter-spacing="1">Les Chartrons</text>
+
+            <!-- Rose des vents simplifiée -->
+            <g transform="translate(375, 50)">
+              <line x1="0" y1="-16" x2="0" y2="16" stroke="rgba(42,31,14,0.4)" stroke-width="0.8"/>
+              <line x1="-16" y1="0" x2="16" y2="0" stroke="rgba(42,31,14,0.4)" stroke-width="0.8"/>
+              <polygon points="0,-16 -3,-8 3,-8" fill="rgba(42,31,14,0.5)"/>
+              <text x="0" y="-20" font-family="Cormorant Garamond, serif" font-size="8" fill="rgba(42,31,14,0.55)" text-anchor="middle">N</text>
+            </g>
+
+            <!-- Chemin animé depuis centre vers destination -->
+            <path id="routePath"
+              d="M 110,130 C 130,125 160,118 190,115 C 220,112 240,108 265,105 C 275,103 278,100 278,95"
+              fill="none"
+              stroke="rgba(120,60,10,0.85)"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-dasharray="4 3"
+              class="animated-path"
+              marker-end="url(#arrowhead)"
+              pathLength="1"/>
+
+            <!-- Point de départ -->
+            <circle cx="110" cy="130" r="4" fill="rgba(120,60,10,0.2)" stroke="rgba(120,60,10,0.7)" stroke-width="1"/>
+            <text x="110" y="145" font-family="Cormorant Garamond, serif" font-size="7" font-style="italic"
+              fill="rgba(42,31,14,0.5)" text-anchor="middle">Tu es ici</text>
+
+            <!-- Destination : Biltoki -->
+            <g id="destMarker">
+              <circle cx="278" cy="92" r="7" fill="rgba(160,80,20,0.15)" stroke="rgba(120,60,10,0.8)" stroke-width="1.2"/>
+              <circle cx="278" cy="92" r="2.5" fill="rgba(120,60,10,0.8)"/>
+              <!-- Petite étoile / croix de localisation -->
+              <line x1="278" y1="82" x2="278" y2="78" stroke="rgba(120,60,10,0.8)" stroke-width="1"/>
+              <line x1="278" y1="102" x2="278" y2="106" stroke="rgba(120,60,10,0.8)" stroke-width="1"/>
+              <line x1="268" y1="92" x2="264" y2="92" stroke="rgba(120,60,10,0.8)" stroke-width="1"/>
+              <line x1="288" y1="92" x2="292" y2="92" stroke="rgba(120,60,10,0.8)" stroke-width="1"/>
+            </g>
+
+            <!-- Label destination avec petit parchemin -->
+            <rect x="295" y="76" width="110" height="32" rx="1"
+              fill="rgba(196,173,133,0.9)" stroke="rgba(80,50,10,0.4)" stroke-width="0.8"/>
+            <text x="350" y="89" font-family="Cormorant Garamond, serif" font-size="9" font-weight="400"
+              fill="rgba(42,31,14,0.9)" text-anchor="middle" letter-spacing="0.5">Vinimarché</text>
+            <text x="350" y="101" font-family="Cormorant Garamond, serif" font-size="7.5" font-style="italic"
+              fill="rgba(42,31,14,0.65)" text-anchor="middle">Halles Biltoki</text>
+
+            <!-- Taches d'âge -->
+            <circle cx="45" cy="260" r="18" fill="rgba(80,50,10,0.06)"/>
+            <circle cx="390" cy="240" r="22" fill="rgba(80,50,10,0.05)"/>
+            <circle cx="200" cy="270" r="12" fill="rgba(80,50,10,0.04)"/>
           </svg>
-          <span style="font-family:'Jost',sans-serif; font-size:9px; color:#7a5f3a; letter-spacing:0.2em; text-transform:uppercase;">ton qr code ici</span>
+
+          <div class="map-legend">
+            <p class="map-legend-title">Vinimarché · Halles Biltoki</p>
+            <p class="map-legend-sub">Bordeaux · Quartier des Chartrons </p>
+          </div>
+
         </div>
       </div>
-      <p class="qr-caption">Bordeaux t'attend</p>
-    </div>
 
+      <a class="map-cta"
+        href="https://maps.google.com/maps?vet=10CAAQoqAOahcKEwiwobbBgJOVAxUAAAAAHQAAAAAQQw..i&channel=fs&client=ubuntu-sn&pvq=OiQweGQ1NTI5ODc1NDI2ZWVmNToweGNhMDNiM2Q1YzUxYTk0ZTE&fvr=1&cs=1&um=1&ie=UTF-8&fb=1&gl=fr&sa=X&ftid=0xd5529875426eef5:0xca03b3d5c51a94e1"
+        target="_blank" rel="noopener">
+        Ouvrir dans Maps →
+      </a>
+
+    </div><!-- /map-reveal -->
   </section>
-
 </div>
 
 <script>
-  // Apparition progressive des sections
   const sections = document.querySelectorAll('section');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
   }, { threshold: 0.1 });
   sections.forEach(s => observer.observe(s));
 
-  // Gestion de la réponse
-  const input = document.getElementById('answerInput');
-  const errorMsg = document.getElementById('errorMsg');
-  const revelation = document.getElementById('revelation');
-  const answerZone = document.getElementById('answerZone');
-
-  const accepted = ['bordeaux'];
+  const input     = document.getElementById('answerInput');
+  const errorMsg  = document.getElementById('errorMsg');
+  const mapReveal = document.getElementById('mapReveal');
+  const answerZone= document.getElementById('answerZone');
 
   function normalize(str) {
     return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
@@ -340,11 +465,18 @@
 
   input.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
-      const val = normalize(this.value);
-      if (accepted.includes(val)) {
+      if (['bordeaux'].includes(normalize(this.value))) {
         answerZone.style.display = 'none';
-        revelation.classList.add('show');
-        revelation.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        mapReveal.classList.add('show');
+        // Petite pause pour que display:block soit appliqué avant la transition
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            mapReveal.classList.add('animate');
+            // Lancer l'animation du chemin
+            document.querySelector('.animated-path').classList.add('draw');
+            mapReveal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        });
       } else {
         errorMsg.classList.add('show');
         this.classList.add('shake');

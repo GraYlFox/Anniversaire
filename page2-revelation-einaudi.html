@@ -1,3 +1,4 @@
+cat > /mnt/user-data/outputs/page2-revelation-einaudi.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -17,6 +18,7 @@
     --cream: #e8dfd0;
     --muted: #5a5248;
     --warm: #a08060;
+    --error: #c47a6a;
   }
 
   html, body {
@@ -29,22 +31,8 @@
     overflow-x: hidden;
   }
 
-  /* Candles ambiance — floating light orbs */
-  .candles {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    overflow: hidden;
-  }
-
-  .candle {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(60px);
-    animation: flicker var(--dur, 6s) ease-in-out infinite alternate;
-    opacity: var(--op, 0.12);
-  }
+  .candles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .candle { position: absolute; border-radius: 50%; filter: blur(60px); animation: flicker var(--dur, 6s) ease-in-out infinite alternate; opacity: var(--op, 0.12); }
 
   @keyframes flicker {
     0%   { transform: scale(1) translateY(0px); opacity: var(--op); }
@@ -52,165 +40,85 @@
     100% { transform: scale(0.95) translateY(2px); opacity: calc(var(--op) * 0.85); }
   }
 
-  .page {
-    position: relative;
-    z-index: 1;
-    max-width: 560px;
-    margin: 0 auto;
-    padding: 80px 32px 120px;
-  }
+  .page { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; padding: 80px 32px 120px; }
 
-  /* Reveal animation */
-  .reveal {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1.4s ease, transform 1.4s ease;
-  }
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 1.4s ease, transform 1.4s ease; }
   .reveal.in { opacity: 1; transform: translateY(0); }
 
-  .eyebrow {
-    font-family: 'Jost', sans-serif;
-    font-size: 9px;
-    letter-spacing: 0.45em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    margin-bottom: 72px;
-  }
+  .eyebrow { font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 0.45em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 72px; }
+  .salutation { font-family: 'Jost', sans-serif; font-size: 12px; letter-spacing: 0.15em; color: var(--gold); margin-bottom: 40px; font-style: normal; }
 
-  .salutation {
-    font-family: 'Jost', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.15em;
-    color: var(--gold);
-    margin-bottom: 40px;
-    font-style: normal;
-  }
-
-  .poem {
-    font-size: clamp(17px, 2.5vw, 21px);
-    font-style: italic;
-    color: var(--cream);
-    margin-bottom: 16px;
-  }
-
+  .poem { font-size: clamp(17px, 2.5vw, 21px); font-style: italic; color: var(--cream); margin-bottom: 16px; }
   .poem p { margin-bottom: 1.1em; }
   .poem p:last-child { margin-bottom: 0; }
 
-  .divider {
-    width: 1px;
-    height: 60px;
-    background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
-    margin: 56px auto;
-    opacity: 0.6;
-  }
+  .divider { width: 1px; height: 60px; background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent); margin: 56px auto; opacity: 0.6; }
 
-  /* La révélation principale */
-  .reveal-block {
-    text-align: center;
-    padding: 0 8px;
-  }
-
-  .reveal-eyebrow {
-    font-family: 'Jost', sans-serif;
-    font-size: 9px;
-    letter-spacing: 0.45em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    margin-bottom: 32px;
-  }
-
-  .artist-name {
-    font-size: clamp(36px, 8vw, 58px);
+  /* Champ réponse */
+  .answer-zone { margin-top: 48px; }
+  .answer-zone input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 0.5px solid var(--gold-dim);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
     font-weight: 300;
-    letter-spacing: 0.08em;
-    color: var(--gold);
-    line-height: 1.1;
-    margin-bottom: 8px;
-    font-style: italic;
+    padding: 10px 0;
+    outline: none;
+    transition: border-color 0.3s;
+    letter-spacing: 0.05em;
+    text-align: center;
+  }
+  .answer-zone input::placeholder { color: var(--muted); font-style: italic; }
+  .answer-zone input:focus { border-color: var(--gold); }
+  .answer-zone input.shake { animation: shake 0.45s ease; border-color: var(--error); }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
   }
 
-  .event-name {
-    font-family: 'Jost', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--warm);
-    margin-bottom: 48px;
-  }
+  .answer-hint { font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 0.2em; color: var(--muted); text-align: center; margin-top: 14px; text-transform: uppercase; }
+  .error-msg { font-family: 'Jost', sans-serif; font-size: 11px; color: var(--error); text-align: center; margin-top: 12px; opacity: 0; transition: opacity 0.3s; letter-spacing: 0.1em; }
+  .error-msg.show { opacity: 1; }
 
-  .venue-block {
-    border: 0.5px solid var(--gold-dim);
-    padding: 28px 24px;
-    margin: 0 auto 48px;
-    max-width: 340px;
-    position: relative;
-  }
+  /* Révélation Einaudi */
+  .revelation { display: none; opacity: 0; transform: translateY(24px); transition: opacity 1.6s ease, transform 1.6s ease; text-align: center; padding: 0 8px; }
+  .revelation.show { display: block; }
+  .revelation.animate { opacity: 1; transform: translateY(0); }
 
-  .venue-block::before, .venue-block::after {
-    content: '';
-    position: absolute;
-    width: 12px; height: 12px;
-    border-color: var(--gold);
-    border-style: solid;
-  }
+  .reveal-eyebrow { font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 0.45em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 32px; }
+
+  .artist-name { font-size: clamp(36px, 8vw, 58px); font-weight: 300; letter-spacing: 0.08em; color: var(--gold); line-height: 1.1; margin-bottom: 8px; font-style: italic; }
+  .event-name { font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--warm); margin-bottom: 48px; }
+
+  .venue-block { border: 0.5px solid var(--gold-dim); padding: 28px 24px; margin: 0 auto 48px; max-width: 340px; position: relative; }
+  .venue-block::before, .venue-block::after { content: ''; position: absolute; width: 12px; height: 12px; border-color: var(--gold); border-style: solid; }
   .venue-block::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
   .venue-block::after  { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+  .venue-name { font-size: clamp(20px, 3.5vw, 26px); font-weight: 300; color: var(--cream); margin-bottom: 8px; }
+  .venue-detail { font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.2em; color: var(--warm); text-transform: uppercase; }
 
-  .venue-name {
-    font-size: clamp(20px, 3.5vw, 26px);
-    font-weight: 300;
-    color: var(--cream);
-    margin-bottom: 8px;
-  }
+  .closing { font-size: clamp(15px, 2vw, 18px); font-style: italic; color: #7a6a58; line-height: 2; margin-top: 16px; }
+  .signature { margin-top: 56px; font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.25em; color: var(--gold-dim); text-transform: uppercase; }
 
-  .venue-detail {
-    font-family: 'Jost', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    color: var(--warm);
-    text-transform: uppercase;
-  }
-
-  .closing {
-    font-size: clamp(15px, 2vw, 18px);
-    font-style: italic;
-    color: #7a6a58;
-    line-height: 2;
-    margin-top: 16px;
-  }
-
-  .signature {
-    margin-top: 56px;
-    font-family: 'Jost', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.25em;
-    color: var(--gold-dim);
-    text-transform: uppercase;
-  }
-
-  /* Candlelight dots */
-  .dots {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin: 40px 0;
-  }
-  .dot {
-    width: 3px; height: 3px;
-    border-radius: 50%;
-    background: var(--gold-dim);
-    opacity: 0.4;
-  }
+  .dots { display: flex; justify-content: center; gap: 6px; margin: 40px 0; }
+  .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--gold-dim); opacity: 0.4; }
 
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1; transform: none; transition: none; }
+    .revelation { transition: none; }
     .candle { animation: none; }
   }
 </style>
 </head>
 <body>
 
-<!-- Candlelight atmosphere -->
 <div class="candles" aria-hidden="true">
   <div class="candle" style="width:300px;height:300px;background:#c9824030;top:10%;left:-5%;--dur:7s;--op:0.15;"></div>
   <div class="candle" style="width:200px;height:200px;background:#a0602018;top:60%;right:-2%;--dur:5s;--op:0.1;"></div>
@@ -222,65 +130,97 @@
 
   <div class="eyebrow reveal" data-delay="0">Ce soir</div>
 
-  <!-- Le poème -->
+  <!-- L'énigme -->
   <div class="reveal" data-delay="300">
     <p class="salutation">Ma grande chérie de grand amour,</p>
     <div class="poem">
       <p>Je pense à quelqu'un.</p>
-      <p>Il est né dans un pays où le soleil est une religion,<br>
-      mais c'est le pays de Shakespear qui l'a formé.<br>
-      Il a étudié au même endroit que Mozart.<br>
-      Il compose des choses simples, —<br>
+      <p>Il est né dans un pays de soleil,<br>
+      mais c'est le nord qui l'a formé.<br>
+      Il a étudié là où Mozart a étudié.<br>
+      Il compose des choses simples —<br>
       si simples qu'on se demande<br>
       pourquoi personne n'y avait pensé avant.</p>
-      <p>Ce n'est pas quelqu'un que tu as découvert recemment.<br>
-      C'est quelqu'un à qui fait partie de ta vie—<br>
-      Mais ta vie a dit... Pas cette fois,<br>
+      <p>Ce n'est pas quelqu'un que tu as découvert.<br>
+      C'est quelqu'un à qui tu avais déjà dit oui —<br>
+      et puis la vie a dit non,<br>
       trop occupée,<br>
-      trop de semaines dans la semaine.</p>
+      trop de semaines en pleine semaine.</p>
       <p>Ce soir,<br>
-      J'ai décidé de changé ça.</p>
+      la vie a changé d'avis.</p>
+    </div>
+
+    <div class="answer-zone" id="answerZone">
+      <input type="text" id="answerInput" placeholder="qui est-ce ?" autocomplete="off" autocorrect="off" spellcheck="false" />
+      <p class="answer-hint">Écris la réponse et appuie sur Entrée</p>
+      <p class="error-msg" id="errorMsg">Ce n'est pas tout à fait ça — cherche encore.</p>
     </div>
   </div>
 
-  <div class="divider reveal" data-delay="600" aria-hidden="true"></div>
-
-  <!-- La révélation -->
-  <div class="reveal-block reveal" data-delay="900">
+  <!-- Révélation après bonne réponse -->
+  <div class="revelation" id="revelation">
+    <div class="divider" aria-hidden="true"></div>
     <p class="reveal-eyebrow">Ce soir, tu vas entendre</p>
-
     <p class="artist-name">Ludovico<br>Einaudi</p>
     <p class="event-name">Candlelight · À la bougie</p>
-
     <div class="venue-block">
       <p class="venue-name">La Cité du Vin</p>
       <p class="venue-detail">Bordeaux · Quai de Bacalan</p>
     </div>
-
     <div class="dots" aria-hidden="true">
       <span class="dot"></span><span class="dot"></span><span class="dot"></span>
     </div>
-
     <p class="closing">
       Des bougies dans le noir.<br>
-      L'émotion dans nos coeurs<br>
-      Toi, et moi, ensemble.
+      Ses notes dans l'air.<br>
+      Toi, à côté de moi.
     </p>
-
-    <p class="signature" style="margin-top: 48px;">Joyeux anniversaire, Ma grande chérie de Grand Amour</p>
+    <p class="signature" style="margin-top: 48px;">Joyeux anniversaire, Mon Amour</p>
   </div>
 
 </div>
 
 <script>
+  // Apparition progressive
   const reveals = document.querySelectorAll('.reveal');
-
-  // Staggered entrance
   reveals.forEach(el => {
     const delay = parseInt(el.dataset.delay || 0);
     setTimeout(() => { el.classList.add('in'); }, 400 + delay);
+  });
+
+  // Gestion réponse
+  const input      = document.getElementById('answerInput');
+  const errorMsg   = document.getElementById('errorMsg');
+  const answerZone = document.getElementById('answerZone');
+  const revelation = document.getElementById('revelation');
+
+  const accepted = ['einaudi', 'ludovico einaudi', 'ludovico'];
+
+  function normalize(str) {
+    return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+  }
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      if (accepted.includes(normalize(this.value))) {
+        answerZone.style.display = 'none';
+        revelation.classList.add('show');
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          revelation.classList.add('animate');
+          revelation.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }));
+      } else {
+        errorMsg.classList.add('show');
+        this.classList.add('shake');
+        setTimeout(() => { this.classList.remove('shake'); errorMsg.classList.remove('show'); }, 1800);
+      }
+    } else {
+      errorMsg.classList.remove('show');
+    }
   });
 </script>
 
 </body>
 </html>
+HTMLEOF
+echo "OK"

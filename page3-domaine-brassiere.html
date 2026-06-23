@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pour toi · II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --parchment: #0d0b09;
+    --gold: #c9a96e;
+    --gold-dim: #7a5f3a;
+    --cream: #e8dfd0;
+    --muted: #6b5e4e;
+    --error: #c47a6a;
+  }
+
+  html, body {
+    min-height: 100%;
+    background: var(--parchment);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 300;
+    line-height: 1.85;
+    overflow-x: hidden;
+  }
+
+  .grain {
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 80px 32px 100px;
+  }
+
+  .eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 56px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .eyebrow::after { content: ''; flex: 1; height: 0.5px; background: var(--gold-dim); opacity: 0.4; }
+
+  section { opacity: 0; transform: translateY(18px); transition: opacity 1.2s ease, transform 1.2s ease; }
+  section.visible { opacity: 1; transform: translateY(0); }
+
+  .salutation {
+    font-size: 13px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    margin-bottom: 36px;
+    font-style: normal;
+  }
+
+  .poem {
+    font-size: clamp(17px, 2.5vw, 20px);
+    font-style: italic;
+    color: var(--cream);
+    margin-bottom: 48px;
+  }
+  .poem p { margin-bottom: 1em; }
+  .poem p:last-child { margin-bottom: 0; }
+
+  .divider { width: 40px; height: 0.5px; background: var(--gold-dim); margin: 52px auto; opacity: 0.5; }
+
+  .enigme-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 32px;
+  }
+
+  .enigme-text {
+    font-size: clamp(16px, 2.2vw, 19px);
+    color: #c4b89e;
+    margin-bottom: 48px;
+    font-style: italic;
+  }
+  .enigme-text p { margin-bottom: 1em; }
+
+  /* Champ réponse */
+  .answer-zone { margin-top: 40px; }
+  .answer-zone input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 0.5px solid var(--gold-dim);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 300;
+    padding: 10px 0;
+    outline: none;
+    transition: border-color 0.3s;
+    letter-spacing: 0.05em;
+    text-align: center;
+  }
+  .answer-zone input::placeholder { color: var(--muted); font-style: italic; }
+  .answer-zone input:focus { border-color: var(--gold); }
+  .answer-zone input.shake { animation: shake 0.45s ease; border-color: var(--error); }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+  }
+
+  .answer-hint { font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 0.2em; color: var(--muted); text-align: center; margin-top: 14px; text-transform: uppercase; }
+  .error-msg { font-family: 'Jost', sans-serif; font-size: 11px; color: var(--error); text-align: center; margin-top: 12px; opacity: 0; transition: opacity 0.3s; letter-spacing: 0.1em; }
+  .error-msg.show { opacity: 1; }
+
+  /* Révélation */
+  .revelation {
+    display: none;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 1.4s ease, transform 1.4s ease;
+    padding-top: 8px;
+  }
+  .revelation.show { display: block; }
+  .revelation.animate { opacity: 1; transform: translateY(0); }
+
+  .rev-intro {
+    font-style: italic;
+    font-size: clamp(15px, 2vw, 18px);
+    color: #a89070;
+    line-height: 2;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+
+  /* Cadeau encadré */
+  .gift-block {
+    border: 0.5px solid var(--gold-dim);
+    padding: 32px 24px;
+    margin: 0 auto 40px;
+    max-width: 360px;
+    position: relative;
+    text-align: center;
+  }
+  .gift-block::before, .gift-block::after {
+    content: '';
+    position: absolute;
+    width: 12px; height: 12px;
+    border-color: var(--gold);
+    border-style: solid;
+  }
+  .gift-block::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
+  .gift-block::after  { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+
+  .gift-eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 20px;
+  }
+
+  .gift-name {
+    font-size: clamp(26px, 5vw, 36px);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1.2;
+    margin-bottom: 10px;
+    letter-spacing: 0.04em;
+  }
+
+  .gift-sub {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .rev-closing {
+    font-style: italic;
+    font-size: clamp(14px, 2vw, 16px);
+    color: #7a6a58;
+    line-height: 2;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  /* QR code */
+  .qr-wrap { text-align: center; }
+
+  .qr-frame {
+    display: inline-block;
+    border: 0.5px solid var(--gold-dim);
+    padding: 20px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .qr-frame::before, .qr-frame::after {
+    content: '';
+    position: absolute;
+    width: 10px; height: 10px;
+    border-color: var(--gold);
+    border-style: solid;
+  }
+  .qr-frame::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
+  .qr-frame::after  { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+
+  .qr-placeholder {
+    width: 160px; height: 160px;
+    background: #1e1a14;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .qr-caption {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    section { transition: none; opacity: 1; transform: none; }
+    .revelation { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="page">
+  <div class="eyebrow">Pour toi · II</div>
+
+  <!-- Poème cadeau brassière -->
+  <section id="s1">
+    <p class="salutation">Mon Amour,</p>
+    <div class="poem">
+      <p>Ce cadeau-là ne se porte pas le soir.</p>
+      <p>Il se porte quand tu transpires,<br>
+      quand tu souffles,<br>
+      quand tu repousses ce que tu croyais<br>
+      être tes limites.</p>
+      <p>Il épouse le corps que tu travailles,<br>
+      que tu respectes,<br>
+      que tu écoutes.</p>
+      <p>Ce cadeau est fait pour toi<br>
+      quand tu es la plus forte.</p>
+    </div>
+  </section>
+
+  <div class="divider" aria-hidden="true"></div>
+
+  <!-- Énigme Le Domaine -->
+  <section id="s2">
+    <p class="enigme-label">Et maintenant, dis-moi</p>
+
+    <div class="enigme-text">
+      <p>Il y a un endroit que tu fréquentes,<br>
+      ouvert depuis peu dans ta ville.</p>
+      <p>On n'y vient pas juste pour soulever des poids.<br>
+      On y vient pour prendre soin —<br>
+      du corps, de l'assiette, du souffle.<br>
+      Pour s'entraîner, récupérer, se nourrir,<br>
+      dans un seul et même lieu.</p>
+      <p>Un endroit pensé dans sa globalité,<br>
+      avec une attention réelle,<br>
+      où l'on se sent bien, naturellement.</p>
+      <p>Quel est son nom ?</p>
+    </div>
+
+    <div class="answer-zone" id="answerZone">
+      <input type="text" id="answerInput" placeholder="ta réponse…" autocomplete="off" autocorrect="off" spellcheck="false" />
+      <p class="answer-hint">Écris la réponse et appuie sur Entrée</p>
+      <p class="error-msg" id="errorMsg">Ce n'est pas tout à fait ça — cherche encore.</p>
+    </div>
+
+    <!-- Révélation -->
+    <div class="revelation" id="revelation">
+
+      <div class="divider" aria-hidden="true"></div>
+
+      <p class="rev-intro">
+        Ce cadeau t'appartient.<br>
+        Porte-le là où tu es la plus toi.
+      </p>
+
+      <div class="gift-block">
+        <p class="gift-eyebrow">Ton cadeau</p>
+        <p class="gift-name">Une brassière<br>de sport</p>
+        <p class="gift-sub">Pour Le Domaine · Bayonne</p>
+      </div>
+
+      <p class="rev-closing">
+        L'aventure continue.<br>
+        Scanne pour la suite.
+      </p>
+
+      <div class="qr-wrap">
+        <div class="qr-frame">
+          <div class="qr-placeholder">
+            <!-- Remplace ce bloc par ton QR code réel : -->
+            <!-- <img src="qr-page1-parfum.png" width="160" height="160" alt="QR code"> -->
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c9a96e" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+              <rect x="14" y="14" width="3" height="3"/>
+              <rect x="18" y="14" width="3" height="3"/>
+              <rect x="14" y="18" width="3" height="3"/>
+              <rect x="18" y="18" width="3" height="3"/>
+            </svg>
+            <span style="font-family:'Jost',sans-serif; font-size:9px; color:#7a5f3a; letter-spacing:0.2em; text-transform:uppercase;">ton qr code ici</span>
+          </div>
+        </div>
+        <p class="qr-caption">La suite t'attend</p>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  sections.forEach(s => observer.observe(s));
+
+  const input      = document.getElementById('answerInput');
+  const errorMsg   = document.getElementById('errorMsg');
+  const answerZone = document.getElementById('answerZone');
+  const revelation = document.getElementById('revelation');
+
+  const accepted = ['le domaine', 'domaine', 'le domaine experience', 'le domaine expérience'];
+
+  function normalize(str) {
+    return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+  }
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      if (accepted.includes(normalize(this.value))) {
+        answerZone.style.display = 'none';
+        revelation.classList.add('show');
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          revelation.classList.add('animate');
+          revelation.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }));
+      } else {
+        errorMsg.classList.add('show');
+        this.classList.add('shake');
+        setTimeout(() => { this.classList.remove('shake'); errorMsg.classList.remove('show'); }, 1800);
+      }
+    } else {
+      errorMsg.classList.remove('show');
+    }
+  });
+</script>
+
+</body>
+</html>
